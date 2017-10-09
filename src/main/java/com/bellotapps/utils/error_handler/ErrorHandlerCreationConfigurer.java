@@ -205,7 +205,7 @@ import java.util.stream.Stream;
                     throw new BeanInitializationException(ERROR_MESSAGE, e);
                 }
             } catch (ClassCastException e) {
-                LOGGER.error("Some error occurred", e); // TODO: better error message
+                LOGGER.error("Some unexpected error occurred. Please report this issues.", e);
                 throw new BeanInitializationException(ERROR_MESSAGE, e);
             }
         }
