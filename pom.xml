@@ -162,4 +162,19 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Juan Marcos Bellini</name>
+            <email>jbellini@bellotapps.com</email>
+            <organization>BellotApps</organization>
+            <organizationUrl>http://www.bellotapps.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/juanmbellini/error-handler.git</connection>
+        <developerConnection>scm:git:ssh://github.com:juanmbellini/error-handler.git</developerConnection>
+        <url>http://github.com/juanmbellini/error-handler/tree/master</url>
+    </scm>
+
 </project>
