@@ -171,6 +171,7 @@ Temporary Items
 ### Maven ###
 target/
 pom.xml.tag
+pom.xml.asc
 pom.xml.releaseBackup
 pom.xml.versionsBackup
 pom.xml.next
