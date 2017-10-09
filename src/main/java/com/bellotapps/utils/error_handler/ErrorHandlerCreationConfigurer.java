@@ -191,17 +191,21 @@ import java.util.stream.Stream;
                     this.handlers.add(handler);
 
                 } catch (NoUniqueBeanDefinitionException e) {
-                    // TODO: decide how to solve this
-
+                    // More than one bean exist for the given handler class
+                    // To continue with initialization, we create one own handler of the given class
+                    LOGGER.warn("More than one bean exist for class {}. Will instantiate own handler", handlerClass);
+                    noBeanClasses.add(handlerClass);
                 } catch (NoSuchBeanDefinitionException e) {
+                    // No bean for the given handler class. We create one own handler of the given class.
                     LOGGER.debug("No bean for class {}. Will create one", handlerClass);
                     noBeanClasses.add(handlerClass);
                 } catch (BeansException e) {
+                    // In this case, a bean exists, but the beanFactory could not get it
                     LOGGER.error("Could not get bean for class {}", handlerClass);
                     throw new BeanInitializationException(ERROR_MESSAGE, e);
                 }
             } catch (ClassCastException e) {
-                LOGGER.error("Some error occurred", e); // TODO: better error message
+                LOGGER.error("Some unexpected error occurred. Please report this issues.", e);
                 throw new BeanInitializationException(ERROR_MESSAGE, e);
             }
         }
