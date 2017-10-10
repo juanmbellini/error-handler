@@ -1,4 +1,4 @@
-# Error-Handler [![Build Status](https://travis-ci.org/juanmbellini/error-handler.svg?branch=master)](https://travis-ci.org/juanmbellini/error-handler)
+# Error-Handler [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![Build Status](https://travis-ci.org/juanmbellini/error-handler.svg?branch=master)](https://travis-ci.org/juanmbellini/error-handler) [![Maven Central](https://img.shields.io/maven-central/v/com.bellotapps.utils/error-handler.svg)](https://repo.maven.apache.org/maven2/com/bellotapps/utils/error-handler/1.0.0-RELEASE)
 A centralized error management system
 
 ## Description
@@ -36,7 +36,7 @@ The following is an example of usage using Spring Boot.
 Bootstrapping class:
 
 ```java
-package com.bellotapps.error_handler_example.config
+package com.bellotapps.error_handler_example.config;
 
 // Imports not listed
 
@@ -47,67 +47,66 @@ package com.bellotapps.error_handler_example.config
 @EnableErrorHandler(basePackages = "com.bellotapps.error_handler_example.exception_handlers")
 public class Application {
 
-	public static void main(String[] args) {
-	    new SpringApplicationBuilder(Application.class)
-	            .bannerMode(Banner.Mode.OFF)
-	            .build().run(args);
-	}
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(Application.class)
+                .bannerMode(Banner.Mode.OFF)
+                .build().run(args);
+    }
 	    
-	/**
-	 * Configures an {@link ObjectMapper} enabling and disabling certain
-	 * {@link SerializationFeature}s and {@link DeserializationFeature}s
-	 *
-	 * @return The configured {@link ObjectMapper}.
-	 */
-	@Bean
-	public ObjectMapper jacksonObjectMapper() {
-	    final ObjectMapper om = new ObjectMapper();
-	    // Serialization
-	    om.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
-	    // Deserialization
-	    om.disable(DeserializationFeature.ACCEPT_FLOAT_AS_INT);
-	    om.enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
-	    om.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
-	
-	    return om;
-	}
-	    
-	/**
-	 * Creates a {@link ResourceConfig} in order to configure Jersey's behaviour.
-	 *
-	 * @return The {@link ResourceConfig} used to configure Jersey's behaviour.
-	 */
-   @Bean
-	public ResourceConfig jerseyConfig() {
-		final ResourceConfig jerseyConfig = new ResourceConfig();
+    /**
+     * Configures an {@link ObjectMapper} enabling and disabling certain
+     * {@link SerializationFeature}s and {@link DeserializationFeature}s
+     *
+     * @return The configured {@link ObjectMapper}.
+     */
+    @Bean
+    public ObjectMapper jacksonObjectMapper() {
+        final ObjectMapper om = new ObjectMapper();
+        // Serialization
+        om.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
+        // Deserialization
+        om.disable(DeserializationFeature.ACCEPT_FLOAT_AS_INT);
+        om.enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
+        om.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
         
-		jerseyConfig.register(ThrowableMapper.class)
-		registerPackages(jerseyConfig, "com.bellotapps.error_handler_example.controllers");
-		jerseyConfig.register(new JacksonJaxbJsonProvider(jacksonObjectMapper(),
-                JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
+        return om;
+    }
 
-       return jerseyConfig;
-	}
+    /**
+     * Creates a {@link ResourceConfig} in order to configure Jersey's behaviour.
+     *
+     * @return The {@link ResourceConfig} used to configure Jersey's behaviour.
+     */
+    @Bean
+    public ResourceConfig jerseyConfig() {
+        final ResourceConfig jerseyConfig = new ResourceConfig();
+
+        jerseyConfig.register(ThrowableMapper.class)
+        registerPackages(jerseyConfig, "com.bellotapps.error_handler_example.controllers");
+        jerseyConfig.register(new JacksonJaxbJsonProvider(jacksonObjectMapper(),
+                JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS));
     
+        return jerseyConfig;
+    }
     
-	/**
-	 * Registers the classes annotated with the {@link Provider} annotation in the given {@code packages}.
-	 * This allows package scanning with Jersey (as currently not supported by library).
-	 *
-	 * @param packages The packages containing providers.
-	 */
-	private static void registerPackages(ResourceConfig resourceConfig, String... packages) {
-	    // Register packages of in app Providers
-	    final ClassPathScanningCandidateComponentProvider scanner =
+    /**
+     * Registers the classes annotated with the {@link Provider} annotation in the given {@code packages}.
+     * This allows package scanning with Jersey (as currently not supported by library).
+     *
+     * @param packages The packages containing providers.
+     */
+    private static void registerPackages(ResourceConfig resourceConfig, String... packages) {
+        // Register packages of in app Providers
+        final ClassPathScanningCandidateComponentProvider scanner =
 	            new ClassPathScanningCandidateComponentProvider(false);
 	    scanner.addIncludeFilter(new AnnotationTypeFilter(Provider.class));
-	
-	    Arrays.stream(packages)
-	            .map(scanner::findCandidateComponents).flatMap(Collection::stream)
-	            .map(beanDefinition ->
-	                    ClassUtils.resolveClassName(beanDefinition.getBeanClassName(), resourceConfig.getClassLoader()))
-	            .forEach(resourceConfig::register);
-	}
+
+        Arrays.stream(packages)
+                .map(scanner::findCandidateComponents).flatMap(Collection::stream)
+                .map(beanDefinition ->
+                        ClassUtils.resolveClassName(beanDefinition.getBeanClassName(), resourceConfig.getClassLoader()))
+                .forEach(resourceConfig::register);
+    }
 }
 
 ```
@@ -115,7 +114,7 @@ public class Application {
 Jersey's ```ExceptionMapper```:
 
 ```java
-package com.bellotapps.error_handler_example.config
+package com.bellotapps.error_handler_example.config;
 
 // Imports not listed
 
@@ -127,30 +126,30 @@ package com.bellotapps.error_handler_example.config
 @Component
 public class ThrowableMapper implements ExceptionMapper<Throwable> {
 
-	/**
-	 * The {@link ErrorHandler} in charge of transforming an exception into data to be returned in the response.
-	 */
-	private final ErrorHandler errorHandler;
-	
-	@Autowired
-	public ThrowableMapper(ErrorHandler exceptionHandler) {
-	    this.errorHandler = exceptionHandler;
-	}
-	
-	@Override
-	public Response toResponse(Throwable exception) {
-	    final ErrorHandler.HandlingResult result = errorHandler.handle(exception);
-	    return Response.status(result.getHttpErrorCode())
-	            .entity(Optional.ofNullable(result.getErrorRepresentationEntity()).orElse(""))
-	            .build();
-	}
+    /**
+     * The {@link ErrorHandler} in charge of transforming an exception into data to be returned in the response.
+     */
+    private final ErrorHandler errorHandler;
+
+    @Autowired
+    public ThrowableMapper(ErrorHandler exceptionHandler) {
+        this.errorHandler = exceptionHandler;
+    }
+
+    @Override
+    public Response toResponse(Throwable exception) {
+        final ErrorHandler.HandlingResult result = errorHandler.handle(exception);
+        return Response.status(result.getHttpErrorCode())
+                .entity(Optional.ofNullable(result.getErrorRepresentationEntity()).orElse(""))
+                .build();
+    }
 }
 ```
 
 An ```ExceptionHandler```:
 
 ```java
-package com.bellotapps.error_handler_example.exception_handlers
+package com.bellotapps.error_handler_example.exception_handlers;
 
 // Imports not listed
 
@@ -160,10 +159,10 @@ package com.bellotapps.error_handler_example.exception_handlers
 @ExceptionHandlerObject
 /* package */ class ThrowableHandler implements ExceptionHandler<Throwable> {
 
-	@Override
-	public ErrorHandler.HandlingResult handle(Throwable exception) {
-	    return new ErrorHandler.HandlingResult(500, null);
-	}
+    @Override
+    public ErrorHandler.HandlingResult handle(Throwable exception) {
+        return new ErrorHandler.HandlingResult(500, null);
+    }
 }
 
 

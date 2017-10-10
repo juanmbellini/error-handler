@@ -10,6 +10,7 @@
     <packaging>jar</packaging>
 
     <name>error-handler</name>
+    <description>A centralized error management system</description>
     <url>https://github.com/juanmbellini/error-handler/wiki</url>
 
     <properties>
