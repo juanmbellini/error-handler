@@ -28,6 +28,11 @@ import java.util.stream.Collectors;
             (ignored) -> new HandlingResult(500, null);
 
 
+    /**
+     * Constructor.
+     *
+     * @param handlers The {@link List} of {@link ExceptionHandler} that will be used to handle exceptions.
+     */
     /* package */ ErrorHandlerImpl(final List<ExceptionHandler<? extends Throwable>> handlers) {
         final Set<ExceptionHandlerContainer> container = toContainers(handlers);
 

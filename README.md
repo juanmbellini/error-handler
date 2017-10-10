@@ -12,24 +12,15 @@ This library lets you define objects that will handle a given exception, and tha
 ## Instructions
 
 ### Maven
-**This artifact is not yet published in Maven Central, so you must access it through [Jitpack](https://jitpack.io/).**
 
 Include the following to your dependency list:
 
 ```xml
 <dependency>
-    <groupId>com.github.juanmbellini</groupId>
+    <groupId>com.bellotapps.utils</groupId>
     <artifactId>error-handler</artifactId>
-    <version>-SNAPSHOT</version>
+    <version>1.0.0-RELEASE</version>
 </dependency>
-```
-Also add Jitpack repository in your repositories list:
-
-```xml
-<repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
-</repository>
 ```
 
 ### Build from source
@@ -42,7 +33,7 @@ $ mvn clean package
 ## Usage
 The following is an example of usage using Spring Boot.
 
-Bootstraping class:
+Bootstrapping class:
 
 ```java
 package com.bellotapps.error_handler_example.config
