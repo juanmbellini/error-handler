@@ -36,7 +36,7 @@ The following is an example of usage using Spring Boot.
 Bootstrapping class:
 
 ```java
-package com.bellotapps.error_handler_example.config
+package com.bellotapps.error_handler_example.config;
 
 // Imports not listed
 
@@ -114,7 +114,7 @@ public class Application {
 Jersey's ```ExceptionMapper```:
 
 ```java
-package com.bellotapps.error_handler_example.config
+package com.bellotapps.error_handler_example.config;
 
 // Imports not listed
 
@@ -149,7 +149,7 @@ public class ThrowableMapper implements ExceptionMapper<Throwable> {
 An ```ExceptionHandler```:
 
 ```java
-package com.bellotapps.error_handler_example.exception_handlers
+package com.bellotapps.error_handler_example.exception_handlers;
 
 // Imports not listed
 
