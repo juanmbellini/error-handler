@@ -16,6 +16,7 @@ public interface ErrorHandler {
      * returning as a result an object with the data to be returned to the API consumer.
      *
      * @param exception The {@link Throwable} to be handled.
+     * @param <T>       The concrete subclass type of {@link Throwable}.
      * @return a {@link HandlingResult} with the data to be returned to the API consumer.
      */
     <T extends Throwable> HandlingResult handle(T exception);
