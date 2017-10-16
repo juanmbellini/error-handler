@@ -11,10 +11,14 @@ import org.springframework.context.annotation.ImportAware;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.core.type.classreading.MetadataReader;
+import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.AssignableTypeFilter;
+import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.ClassUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -154,8 +158,7 @@ import java.util.stream.Stream;
         // and are annotated with ExceptionHandlerObject annotation
         final ClassPathScanningCandidateComponentProvider scanner =
                 new ClassPathScanningCandidateComponentProvider(false);
-        scanner.addIncludeFilter(new AnnotationTypeFilter(ExceptionHandlerObject.class));
-        scanner.addIncludeFilter(new AssignableTypeFilter(ExceptionHandler.class));
+        scanner.addIncludeFilter(new ExceptionHandlerObjectAnnotatedAndExceptionHandlerAssignableTypeFilter());
 
         // Scan packages to get classes used as exception handlers
         // (i.e are located in the packages to scan and, implement ExceptionHandler interface,
@@ -243,5 +246,37 @@ import java.util.stream.Stream;
                 }).collect(Collectors.toList());
 
         this.handlers.addAll(createdHandlers);
+    }
+
+    /**
+     * Custom filter to get classes annotated with {@link ExceptionHandlerObject}
+     * and that implement {@link ExceptionHandler} interface.
+     */
+    private static class ExceptionHandlerObjectAnnotatedAndExceptionHandlerAssignableTypeFilter implements TypeFilter {
+
+        /**
+         * Annotation type filter to get those classes annotated with {@link ExceptionHandlerObject}.
+         */
+        private final AnnotationTypeFilter exceptionHandlerObjectAnnotationFilter;
+
+        /**
+         * Assignable type filter to get those classes that implement {@link ExceptionHandler} interface.
+         */
+        private final AssignableTypeFilter assignableFromExceptionHandlerInterfaceFilter;
+
+        /**
+         * Constructor.
+         */
+        private ExceptionHandlerObjectAnnotatedAndExceptionHandlerAssignableTypeFilter() {
+            this.exceptionHandlerObjectAnnotationFilter = new AnnotationTypeFilter(ExceptionHandlerObject.class);
+            this.assignableFromExceptionHandlerInterfaceFilter = new AssignableTypeFilter(ExceptionHandler.class);
+        }
+
+        @Override
+        public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory)
+                throws IOException {
+            return exceptionHandlerObjectAnnotationFilter.match(metadataReader, metadataReaderFactory)
+                    && assignableFromExceptionHandlerInterfaceFilter.match(metadataReader, metadataReaderFactory);
+        }
     }
 }
