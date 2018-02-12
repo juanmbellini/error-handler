@@ -25,29 +25,51 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
 
-
         <!-- Dependencies -->
-        <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
-        <org.slf4j.version>1.7.5</org.slf4j.version>
+        <org.springframework.boot.version>1.5.8.RELEASE</org.springframework.boot.version>
         <junit.version>RELEASE</junit.version>
         <org.mockito.version>1.9.5</org.mockito.version>
-        <logback.version>1.1.2</logback.version>
-        <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
     </properties>
+
+    <dependencyManagement>
+        <!-- Spring Boot Dependency Management, in order to avoid setting version numbers -->
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${org.springframework.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Manage JUnit, as Spring Boot Dependencies uses another version -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Manage Mockito, as Spring Boot Dependencies does not manage mockito-all -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${org.mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- Spring stuff -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${org.springframework.version}</version>
         </dependency>
 
         <!--Logging-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${org.slf4j.version}</version>
         </dependency>
 
         <!-- Testing -->
@@ -55,42 +77,29 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
         <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>${org.mockito.version}</version>
-            <scope>test</scope>
         </dependency>
+
         <!-- Testing logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>${logback.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>${org.slf4j.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.logback-extensions</groupId>
-            <artifactId>logback-ext-spring</artifactId>
-            <version>${logback-ext-spring.version}</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
