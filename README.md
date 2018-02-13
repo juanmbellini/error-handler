@@ -19,7 +19,7 @@ Include the following to your dependency list:
 <dependency>
     <groupId>com.bellotapps.utils</groupId>
     <artifactId>error-handler</artifactId>
-    <version>1.0.0-RELEASE</version>
+    <version>1.0.2-RELEASE</version>
 </dependency>
 ```
 
