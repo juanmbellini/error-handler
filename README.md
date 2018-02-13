@@ -1,4 +1,4 @@
-# Error-Handler [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![Build Status](https://travis-ci.org/juanmbellini/error-handler.svg?branch=master)](https://travis-ci.org/juanmbellini/error-handler) [![Maven Central](https://img.shields.io/maven-central/v/com.bellotapps.utils/error-handler.svg)](https://repo.maven.apache.org/maven2/com/bellotapps/utils/error-handler/1.0.1-RELEASE)
+# Error-Handler [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![Build Status](https://travis-ci.org/juanmbellini/error-handler.svg?branch=master)](https://travis-ci.org/juanmbellini/error-handler) [![Maven Central](https://img.shields.io/maven-central/v/com.bellotapps.utils/error-handler.svg)](https://repo.maven.apache.org/maven2/com/bellotapps/utils/error-handler/1.0.2-RELEASE)
 A centralized error management system
 
 ## Description
