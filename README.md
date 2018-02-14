@@ -1,4 +1,4 @@
-# Error-Handler [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![Build Status](https://travis-ci.org/juanmbellini/error-handler.svg?branch=master)](https://travis-ci.org/juanmbellini/error-handler) [![Maven Central](https://img.shields.io/maven-central/v/com.bellotapps.utils/error-handler.svg)](https://repo.maven.apache.org/maven2/com/bellotapps/utils/error-handler/1.0.2-RELEASE)
+# Error-Handler [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![Build Status](https://travis-ci.org/juanmbellini/error-handler.svg?branch=master)](https://travis-ci.org/juanmbellini/error-handler) [![Maven Central](https://img.shields.io/maven-central/v/com.bellotapps.utils/error-handler.svg)](https://repo.maven.apache.org/maven2/com/bellotapps/utils/error-handler/2.0.0-RELEASE/)
 A centralized error management system
 
 ## Description
@@ -19,7 +19,7 @@ Include the following to your dependency list:
 <dependency>
     <groupId>com.bellotapps.utils</groupId>
     <artifactId>error-handler</artifactId>
-    <version>1.0.2-RELEASE</version>
+    <version>2.0.0-RELEASE</version>
 </dependency>
 ```
 
@@ -165,8 +165,16 @@ package com.bellotapps.error_handler_example.exception_handlers;
     }
 }
 
-
 ```
+### Custom Configuration
+
+You can also create your own configuration class for the ErrorHandler.
+
+For example, you could extend ```AbstractErrorHandlerCreationConfigurer```, implementing the ```getPackagesCollection()``` to tell the packages to be scanned for ```ExceptionHandler``` objects.
+
+Another way is extending the ```AnnotationErrorHandlerCreationConfigurer``` class, setting which is the annotation from which the system must take metadata to get the packages names. Also, you must implement the method from which that metadata is extracted from the annotation.
+
+Finally, you could create your own ```ErrorHandler``` using an ```ErrorHandlerFactory```. Note that you can get a bean of this factory by using the ```@EnableErrorHandlerFactory``` annotation in a ```@Configuration``` class.
 
 ## License
 
