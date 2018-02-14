@@ -57,10 +57,10 @@ public abstract class AbstractErrorHandlerCreationConfigurer implements ImportAw
      * @return The {@link AnnotationMetadata} set in this configurer class.
      */
     protected AnnotationMetadata getImportMetadata() {
-        if (!initialized || importMetadata == null) {
-            return importMetadata;
+        if (importMetadata == null) {
+            throw new IllegalStateException("No AnnotationMetadata was set");
         }
-        throw new IllegalStateException("The ErrorHandlerCreationConfigurer was not correctly initialized");
+        return importMetadata;
     }
 
     @Bean
