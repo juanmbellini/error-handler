@@ -59,7 +59,7 @@ public class ErrorHandlerFactory {
     /**
      * A {@link Map} holding cached {@link ExceptionHandler}s for a given package name.
      */
-    private final Map<String, List<ExceptionHandler<? extends Throwable>>> cachedHandlers;
+    private final Map<String, List<ExceptionHandler<? extends Throwable, ?>>> cachedHandlers;
 
 
     /**
@@ -127,7 +127,7 @@ public class ErrorHandlerFactory {
      */
     public ErrorHandler createErrorHandler(Collection<String> packages) {
         // Perform package scanning for those not cached
-        final Map<String, List<ExceptionHandler<? extends Throwable>>> foundedHandlers = packages.stream()
+        final Map<String, List<ExceptionHandler<? extends Throwable, ?>>> foundedHandlers = packages.stream()
                 .filter(pkg -> !cachedHandlers.containsKey(pkg))
                 .collect(Collectors.toMap(Function.identity(),
                         pkg -> scanPackage(pkg)
@@ -138,7 +138,7 @@ public class ErrorHandlerFactory {
         // Save in cache those handlers that have been found
         this.cachedHandlers.putAll(foundedHandlers);
         // Get stored handlers
-        final List<ExceptionHandler<? extends Throwable>> handlers = cachedHandlers.values()
+        final List<ExceptionHandler<? extends Throwable, ?>> handlers = cachedHandlers.values()
                 .stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
@@ -168,7 +168,7 @@ public class ErrorHandlerFactory {
      *
      * @param <T> The concrete type of {@link ExceptionHandler}.
      */
-    private final static class ExceptionHandlerGetter<T extends ExceptionHandler<? extends Throwable>> {
+    private final static class ExceptionHandlerGetter<T extends ExceptionHandler<? extends Throwable, ?>> {
 
         /**
          * The class of {@link ExceptionHandler} extension.
@@ -273,7 +273,7 @@ public class ErrorHandlerFactory {
          *
          * @param handlerClass The class of the bean that has been found.
          */
-        private static void logBeanFound(Class<? extends ExceptionHandler<? extends Throwable>> handlerClass) {
+        private static void logBeanFound(Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
             @SuppressWarnings("unchecked") final Class<? extends Throwable> throwableClass =
                     (Class<? extends Throwable>) ResolvableType.forClass(ExceptionHandler.class, handlerClass)
                             .getGeneric(0)
@@ -286,7 +286,7 @@ public class ErrorHandlerFactory {
          *
          * @param handlerClass The class of the beans that has been found.
          */
-        private static void logMultipleBeans(Class<? extends ExceptionHandler<? extends Throwable>> handlerClass) {
+        private static void logMultipleBeans(Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
             LOGGER.warn("More than one bean exist for class {}. Will instantiate own handler", handlerClass);
         }
 
@@ -295,7 +295,7 @@ public class ErrorHandlerFactory {
          *
          * @param handlerClass The class of the not found beans.
          */
-        private static void logNoBeanFound(Class<? extends ExceptionHandler<? extends Throwable>> handlerClass) {
+        private static void logNoBeanFound(Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
             LOGGER.debug("No bean for class {}. Will create one", handlerClass);
         }
 
@@ -305,7 +305,7 @@ public class ErrorHandlerFactory {
          *
          * @param handlerClass The class of the bean that could not be gotten due to errors.
          */
-        private static void logBeansException(Class<? extends ExceptionHandler<? extends Throwable>> handlerClass) {
+        private static void logBeansException(Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
             LOGGER.error("Could not get bean for class {}", handlerClass);
 
         }
