@@ -246,9 +246,10 @@ public class ErrorHandlerFactory {
         private T instantiate() {
             try {
                 final Constructor<T> constructor = handlerClass.getDeclaredConstructor(); // Get default constructor
-                constructor.setAccessible(true);
-                final T handler = constructor.newInstance();
-                constructor.setAccessible(false);
+                final boolean accessible = constructor.isAccessible(); // First, check the accessible flag
+                constructor.setAccessible(true); // Make it accessible (if already was, nothing happens)
+                final T handler = constructor.newInstance(); // Instantiate
+                constructor.setAccessible(accessible); // Restore the accessible flag
                 return handler;
             } catch (NoSuchMethodException e) {
                 LOGGER.error("No default constructor for class {}", handlerClass);
