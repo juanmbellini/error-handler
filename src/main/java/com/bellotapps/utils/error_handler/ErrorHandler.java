@@ -17,15 +17,18 @@ public interface ErrorHandler {
      *
      * @param exception The {@link Throwable} to be handled.
      * @param <T>       The concrete subclass type of {@link Throwable}.
+     * @param <E>       Concrete type of entity to be sent in the response.
      * @return a {@link HandlingResult} with the data to be returned to the API consumer.
      */
-    <T extends Throwable> HandlingResult handle(T exception);
+    <T extends Throwable, E> HandlingResult<E> handle(T exception);
 
 
     /**
      * Container class holding the results of handling a {@link Throwable}.
+     *
+     * @param <E> Concrete type of entity to be sent in the response.
      */
-    final class HandlingResult {
+    final class HandlingResult<E> {
 
         /**
          * The HTTP status code that must be returned in the response.
@@ -35,7 +38,7 @@ public interface ErrorHandler {
         /**
          * The entity that will be returned in the response. Can be null.
          */
-        private final Object errorRepresentationEntity;
+        private final E errorRepresentationEntity;
 
 
         /**
@@ -44,7 +47,7 @@ public interface ErrorHandler {
          * @param httpErrorCode             The HTTP status code that must be returned in the response.
          * @param errorRepresentationEntity The entity that will be returned in the response. Can be null.
          */
-        public HandlingResult(int httpErrorCode, Object errorRepresentationEntity) {
+        public HandlingResult(int httpErrorCode, E errorRepresentationEntity) {
             this.httpErrorCode = httpErrorCode;
             this.errorRepresentationEntity = errorRepresentationEntity;
         }
@@ -59,7 +62,7 @@ public interface ErrorHandler {
         /**
          * @return The entity that will be returned in the response. Can be null.
          */
-        public Object getErrorRepresentationEntity() {
+        public E getErrorRepresentationEntity() {
             return errorRepresentationEntity;
         }
     }

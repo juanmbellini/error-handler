@@ -24,16 +24,16 @@ public class ErrorHandlerImplTest {
 
     @Test
     public void testListOfHandlersWithDefault() {
-        final ExceptionHandler<NullPointerException> nullPointerExceptionHandler =
+        final ExceptionHandler<NullPointerException, String> nullPointerExceptionHandler =
                 new TestingExceptionHandlers.NullPointerExceptionHandler();
-        final ExceptionHandler<IllegalArgumentException> illegalArgumentHandler =
+        final ExceptionHandler<IllegalArgumentException, String> illegalArgumentHandler =
                 new TestingExceptionHandlers.IllegalArgumentExceptionHandler();
-        final ExceptionHandler<RuntimeException> runtimeExceptionHandler =
+        final ExceptionHandler<RuntimeException, String> runtimeExceptionHandler =
                 new TestingExceptionHandlers.RuntimeExceptionHandler();
-        final ExceptionHandler<Throwable> throwableHandler =
+        final ExceptionHandler<Throwable, String> throwableHandler =
                 new TestingExceptionHandlers.ThrowableHandler();
 
-        final List<ExceptionHandler<? extends Throwable>> handlers = Stream
+        final List<ExceptionHandler<? extends Throwable, ?>> handlers = Stream
                 .of(nullPointerExceptionHandler, illegalArgumentHandler, runtimeExceptionHandler, throwableHandler)
                 .collect(Collectors.toList());
 
@@ -53,14 +53,14 @@ public class ErrorHandlerImplTest {
 
     @Test
     public void testListOfHandlersWithoutDefault() throws NoSuchFieldException, IllegalAccessException {
-        final ExceptionHandler<NullPointerException> nullPointerExceptionHandler =
+        final ExceptionHandler<NullPointerException, String> nullPointerExceptionHandler =
                 new TestingExceptionHandlers.NullPointerExceptionHandler();
-        final ExceptionHandler<IllegalArgumentException> illegalArgumentHandler =
+        final ExceptionHandler<IllegalArgumentException, String> illegalArgumentHandler =
                 new TestingExceptionHandlers.IllegalArgumentExceptionHandler();
-        final ExceptionHandler<RuntimeException> runtimeExceptionHandler =
+        final ExceptionHandler<RuntimeException, String> runtimeExceptionHandler =
                 new TestingExceptionHandlers.RuntimeExceptionHandler();
 
-        final List<ExceptionHandler<? extends Throwable>> handlers =
+        final List<ExceptionHandler<? extends Throwable, ?>> handlers =
                 Stream.of(nullPointerExceptionHandler, illegalArgumentHandler, runtimeExceptionHandler)
                         .collect(Collectors.toList());
 
@@ -96,12 +96,12 @@ public class ErrorHandlerImplTest {
      * @throws NoSuchFieldException   Never.
      * @throws IllegalAccessException Never.
      */
-    private static ExceptionHandler<Throwable> getDefaultHandler(ErrorHandlerImpl errorHandler)
+    private static ExceptionHandler<Throwable, String> getDefaultHandler(ErrorHandlerImpl errorHandler)
             throws NoSuchFieldException, IllegalAccessException {
         final Field defaultHandlerField = errorHandler.getClass().getDeclaredField("DEFAULT_THROWABLE_HANDLER");
         defaultHandlerField.setAccessible(true);
-        @SuppressWarnings("unchecked") final ExceptionHandler<Throwable> defaultHandler =
-                (ExceptionHandler<Throwable>) defaultHandlerField.get(errorHandler);
+        @SuppressWarnings("unchecked") final ExceptionHandler<Throwable, String> defaultHandler =
+                (ExceptionHandler<Throwable, String>) defaultHandlerField.get(errorHandler);
         defaultHandlerField.setAccessible(false);
 
         return defaultHandler;
@@ -117,8 +117,8 @@ public class ErrorHandlerImplTest {
      *                         the same way the {@link ErrorHandler}.
      * @param <T>              The concrete subtype of {@link Throwable}.
      */
-    private static <T extends Throwable> void testHandle(T throwable, ErrorHandler errorHandler,
-                                                         ExceptionHandler<T> throwableHandler, String errorMessage) {
+    private static <T extends Throwable, E> void testHandle(T throwable, ErrorHandler errorHandler,
+                                                         ExceptionHandler<T, E> throwableHandler, String errorMessage) {
         final ErrorHandler.HandlingResult errorHandlerResult = errorHandler.handle(throwable);
         final ErrorHandler.HandlingResult exceptionHandlerResult = throwableHandler.handle(throwable);
         // Test a result is returned
