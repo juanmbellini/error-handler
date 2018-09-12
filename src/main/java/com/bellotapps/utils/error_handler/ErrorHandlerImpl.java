@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.ResolvableType;
+import org.springframework.util.Assert;
 
 import java.util.*;
 import java.util.function.Function;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
      * Default {@link ExceptionHandler}, in case no one is set for {@link Throwable} (i.e fallback handler).
      */
     private static final ExceptionHandler<Throwable, Object> DEFAULT_THROWABLE_HANDLER =
-            (ignored) -> new HandlingResult<>(500, null);
+            (ignored) -> HandlingResult.justErrorCode(500);
 
     /**
      * Constructor.
@@ -51,7 +52,7 @@ import java.util.stream.Collectors;
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         LOGGER.info("Error handler initialized");
         LOGGER.debug("Will handle {}", this.handlers.stream()
                 .map(ExceptionHandlerContainer::getExceptionClass)
@@ -60,13 +61,9 @@ import java.util.stream.Collectors;
 
     @Override
     public <T extends Throwable, E> HandlingResult<E> handle(T exception) {
-        Objects.requireNonNull(exception, "The exception must not be null");
-
-        //noinspection unchecked
-        final Class<T> receivedExceptionClass = (Class<T>) exception.getClass();
-
-
-        final ExceptionHandler<T, E> handler = this.handlers.stream()
+        Assert.notNull(exception, "The exception must not be null");
+        @SuppressWarnings("unchecked") final Class<T> receivedExceptionClass = (Class<T>) exception.getClass();
+        @SuppressWarnings("unchecked") final ExceptionHandler<T, E> handler = this.handlers.stream()
                 .filter(container -> (container.getExceptionClass().isAssignableFrom(receivedExceptionClass)))
                 .map(container -> (ExceptionHandlerContainer<T, E>) container)
                 .map(container -> new ContainerWithDistance<>(receivedExceptionClass, container))
@@ -100,7 +97,6 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList());
 
         // Check if there is more than one container holding the same class
-        //noinspection unchecked
         final Map<Class<? extends Throwable>, List<ExceptionHandlerContainer<? extends Throwable, ?>>> repeated =
                 containers.stream()
                         .collect(Collectors.groupingBy(ExceptionHandlerContainer::getExceptionClass))
@@ -132,17 +128,15 @@ import java.util.stream.Collectors;
      *                               must be calculated.
      * @param savedExceptionClass    The {@link Class} to which the distance must be calculated.
      * @return The distance between the two classes.
-     * @throws NullPointerException     If any of both classes is null.
-     * @throws IllegalArgumentException If the given {@code receivedExceptionClass}
+     * @throws IllegalArgumentException If any of both classes is null or if the given {@code receivedExceptionClass}
      *                                  is not a subclass of the given {@code savedExceptionClass}.
      */
     private static int distance(Class<?> receivedExceptionClass, final Class<?> savedExceptionClass)
-            throws NullPointerException, IllegalArgumentException {
-        Objects.requireNonNull(receivedExceptionClass, "Received null as exception to handle");
-        Objects.requireNonNull(savedExceptionClass, "A null was saved as a managed exception");
-        if (!savedExceptionClass.isAssignableFrom(receivedExceptionClass)) {
-            throw new IllegalArgumentException("Received exception class is not assignable from saved exception class");
-        }
+            throws IllegalArgumentException {
+        Assert.notNull(receivedExceptionClass, "Received null as exception to handle");
+        Assert.notNull(savedExceptionClass, "A null was saved as a managed exception");
+        Assert.isTrue(savedExceptionClass.isAssignableFrom(receivedExceptionClass),
+                "Received exception class is not assignable from saved exception class");
         int distance = 0;
         while (receivedExceptionClass != savedExceptionClass) {
             distance++;
@@ -181,7 +175,7 @@ import java.util.stream.Collectors;
          * @param handler The {@link ExceptionHandler} in charge of handling the {@link Throwable} of type {@code T}.
          */
         private ExceptionHandlerContainer(ExceptionHandler<T, E> handler) {
-            Objects.requireNonNull(handler, "The handler must not be null");
+            Assert.notNull(handler, "The handler must not be null");
             //noinspection unchecked
             this.exceptionClass = (Class<T>) ResolvableType.forClass(ExceptionHandler.class, handler.getClass())
                     .getGeneric(0)

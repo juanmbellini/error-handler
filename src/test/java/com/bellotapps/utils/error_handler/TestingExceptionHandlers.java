@@ -9,8 +9,8 @@ package com.bellotapps.utils.error_handler;
             implements ExceptionHandler<NullPointerException, String> {
 
         @Override
-        public ErrorHandler.HandlingResult<String> handle(NullPointerException exception) {
-            return new ErrorHandler.HandlingResult<>(400, "Was null");
+        public HandlingResult<String> handle(NullPointerException exception) {
+            return HandlingResult.withPayload(400, "Was null");
         }
     }
 
@@ -18,8 +18,8 @@ package com.bellotapps.utils.error_handler;
             implements ExceptionHandler<IllegalArgumentException, String> {
 
         @Override
-        public ErrorHandler.HandlingResult<String> handle(IllegalArgumentException exception) {
-            return new ErrorHandler.HandlingResult<>(400, "illegal argument");
+        public HandlingResult<String> handle(IllegalArgumentException exception) {
+            return HandlingResult.withPayload(400, "illegal argument");
         }
     }
 
@@ -27,8 +27,8 @@ package com.bellotapps.utils.error_handler;
             implements ExceptionHandler<RuntimeException, String> {
 
         @Override
-        public ErrorHandler.HandlingResult<String> handle(RuntimeException exception) {
-            return new ErrorHandler.HandlingResult<>(500, "runtime exception");
+        public HandlingResult<String> handle(RuntimeException exception) {
+            return HandlingResult.withPayload(500, "runtime exception");
         }
     }
 
@@ -36,8 +36,8 @@ package com.bellotapps.utils.error_handler;
             implements ExceptionHandler<Throwable, String> {
 
         @Override
-        public ErrorHandler.HandlingResult<String> handle(Throwable exception) {
-            return new ErrorHandler.HandlingResult<>(500, "a throwable was not caught");
+        public HandlingResult<String> handle(Throwable exception) {
+            return HandlingResult.withPayload(500, "a throwable was not caught");
         }
     }
 }
