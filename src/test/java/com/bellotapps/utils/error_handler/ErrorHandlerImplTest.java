@@ -108,7 +108,7 @@ public class ErrorHandlerImplTest {
     }
 
     /**
-     * Performs testing of handling a given {@link Throwable}, asserting that the {@link ErrorHandler.HandlingResult}
+     * Performs testing of handling a given {@link Throwable}, asserting that the {@link HandlingResult}
      * are the same when handling from the given {@link ErrorHandler} and from the given {@link ExceptionHandler}.
      *
      * @param throwable        The {@link Throwable} to be handled.
@@ -118,9 +118,9 @@ public class ErrorHandlerImplTest {
      * @param <T>              The concrete subtype of {@link Throwable}.
      */
     private static <T extends Throwable, E> void testHandle(T throwable, ErrorHandler errorHandler,
-                                                         ExceptionHandler<T, E> throwableHandler, String errorMessage) {
-        final ErrorHandler.HandlingResult errorHandlerResult = errorHandler.handle(throwable);
-        final ErrorHandler.HandlingResult exceptionHandlerResult = throwableHandler.handle(throwable);
+                                                            ExceptionHandler<T, E> throwableHandler, String errorMessage) {
+        final HandlingResult errorHandlerResult = errorHandler.handle(throwable);
+        final HandlingResult exceptionHandlerResult = throwableHandler.handle(throwable);
         // Test a result is returned
         Assert.assertNotNull(errorMessage, errorHandlerResult);
         // Test result content

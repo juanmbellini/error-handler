@@ -9,6 +9,7 @@ package com.bellotapps.utils.error_handler;
  * @see ExceptionHandlerObject
  * @see EnableErrorHandler
  */
+@FunctionalInterface
 public interface ErrorHandler {
 
     /**
@@ -21,49 +22,4 @@ public interface ErrorHandler {
      * @return a {@link HandlingResult} with the data to be returned to the API consumer.
      */
     <T extends Throwable, E> HandlingResult<E> handle(T exception);
-
-
-    /**
-     * Container class holding the results of handling a {@link Throwable}.
-     *
-     * @param <E> Concrete type of entity to be sent in the response.
-     */
-    final class HandlingResult<E> {
-
-        /**
-         * The HTTP status code that must be returned in the response.
-         */
-        private final int httpErrorCode;
-
-        /**
-         * The entity that will be returned in the response. Can be null.
-         */
-        private final E errorRepresentationEntity;
-
-
-        /**
-         * Constructor.
-         *
-         * @param httpErrorCode             The HTTP status code that must be returned in the response.
-         * @param errorRepresentationEntity The entity that will be returned in the response. Can be null.
-         */
-        public HandlingResult(int httpErrorCode, E errorRepresentationEntity) {
-            this.httpErrorCode = httpErrorCode;
-            this.errorRepresentationEntity = errorRepresentationEntity;
-        }
-
-        /**
-         * @return The HTTP status code that must be returned in the response.
-         */
-        public int getHttpErrorCode() {
-            return httpErrorCode;
-        }
-
-        /**
-         * @return The entity that will be returned in the response. Can be null.
-         */
-        public E getErrorRepresentationEntity() {
-            return errorRepresentationEntity;
-        }
-    }
 }

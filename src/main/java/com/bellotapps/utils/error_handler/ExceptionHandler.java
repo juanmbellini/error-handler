@@ -20,7 +20,7 @@ public interface ExceptionHandler<T extends Throwable, E> {
      * Handles the given {@code exception}.
      *
      * @param exception The exception to be handled.
-     * @return The {@link ErrorHandler.HandlingResult} of handling the given {@code exception}.
+     * @return The {@link HandlingResult} of handling the given {@code exception}.
      */
-    ErrorHandler.HandlingResult<E> handle(T exception);
+    HandlingResult<E> handle(T exception);
 }
