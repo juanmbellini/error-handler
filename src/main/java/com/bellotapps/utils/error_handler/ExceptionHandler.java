@@ -22,5 +22,5 @@ public interface ExceptionHandler<T extends Throwable, E> {
      * @param exception The exception to be handled.
      * @return The {@link HandlingResult} of handling the given {@code exception}.
      */
-    HandlingResult<E> handle(T exception);
+    HandlingResult<E> handle(final T exception);
 }

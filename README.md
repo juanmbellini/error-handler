@@ -157,7 +157,7 @@ package com.bellotapps.error_handler_example.exception_handlers;
  * {@link ExceptionHandler} in charge of handling {@link Throwable}.
  */
 @ExceptionHandlerObject
-/* package */ class ThrowableHandler implements ExceptionHandler<Throwable> {
+public class ThrowableHandler implements ExceptionHandler<Throwable> {
 
     @Override
     public ErrorHandler.HandlingResult handle(Throwable exception) {

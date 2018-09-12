@@ -14,16 +14,16 @@ import java.util.stream.Stream;
  */
 @Configuration
 @EnableErrorHandlerFactory
-/* package */ class ErrorHandlerCreationConfigurer
+public class ErrorHandlerCreationConfigurer
         extends AnnotationErrorHandlerCreationConfigurer<EnableErrorHandler> {
 
     /**
-     * Protected constructor, in order to let it be initialized only by subclasses.
+     * Constructor.
      *
      * @param errorHandlerFactory The {@link ErrorHandlerFactory} to be used to create the {@link ErrorHandler} bean.
      */
     @Autowired
-    public ErrorHandlerCreationConfigurer(ErrorHandlerFactory errorHandlerFactory) {
+    public ErrorHandlerCreationConfigurer(final ErrorHandlerFactory errorHandlerFactory) {
         super(errorHandlerFactory);
     }
 
@@ -33,7 +33,7 @@ import java.util.stream.Stream;
     }
 
     @Override
-    protected Collection<String> getPackagesCollectionFromAnnotation(EnableErrorHandler enableErrorHandler) {
+    protected Collection<String> getPackagesCollectionFromAnnotation(final EnableErrorHandler enableErrorHandler) {
         final String[] basePackages = enableErrorHandler.basePackages();
         final String[] basePackageClasses = Arrays.stream(enableErrorHandler.basePackageClasses())
                 .map(Class::getPackage)

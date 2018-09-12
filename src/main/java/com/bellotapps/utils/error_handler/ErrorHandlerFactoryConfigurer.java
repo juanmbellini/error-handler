@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * Configuration class for {@link ErrorHandlerFactory}.
  */
 @Configuration
-/* package */ class ErrorHandlerFactoryConfigurer implements InitializingBean, BeanFactoryAware, BeanClassLoaderAware {
+public class ErrorHandlerFactoryConfigurer implements InitializingBean, BeanFactoryAware, BeanClassLoaderAware {
 
     /**
      * The {@link BeanFactory} to be used by the generated {@link ErrorHandlerFactory}.
@@ -42,17 +42,17 @@ import org.springframework.context.annotation.Configuration;
     }
 
     @Override
-    public void setBeanClassLoader(ClassLoader classLoader) {
+    public void setBeanClassLoader(final ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         this.initialized = true;
     }
 }
