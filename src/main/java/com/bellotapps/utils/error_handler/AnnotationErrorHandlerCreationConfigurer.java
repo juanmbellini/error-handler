@@ -19,7 +19,7 @@ public abstract class AnnotationErrorHandlerCreationConfigurer<A extends Annotat
      *
      * @param errorHandlerFactory The {@link ErrorHandlerFactory} to be used to create the {@link ErrorHandler} bean.
      */
-    protected AnnotationErrorHandlerCreationConfigurer(ErrorHandlerFactory errorHandlerFactory) {
+    protected AnnotationErrorHandlerCreationConfigurer(final ErrorHandlerFactory errorHandlerFactory) {
         super(errorHandlerFactory);
     }
 
@@ -38,7 +38,6 @@ public abstract class AnnotationErrorHandlerCreationConfigurer<A extends Annotat
      */
     private A retrieveAnnotation() throws ClassNotFoundException {
         final Class<?> importingClass = Class.forName(getImportMetadata().getClassName());
-
         return Optional.ofNullable(AnnotationUtils.findAnnotation(importingClass, getAnnotationClass()))
                 .orElseThrow(IllegalArgumentException::new);
     }
@@ -49,7 +48,7 @@ public abstract class AnnotationErrorHandlerCreationConfigurer<A extends Annotat
      * @param annotation The annotation from which packages will be retrieved.
      * @return A {@link Collection} of packages names to be retrieved by the {@link #getPackagesCollection()} method.
      */
-    protected abstract Collection<String> getPackagesCollectionFromAnnotation(A annotation);
+    protected abstract Collection<String> getPackagesCollectionFromAnnotation(final A annotation);
 
     /**
      * @return The {@link Class} of the annotation used to retrieve packages from.

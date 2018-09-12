@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Concrete implementation of {@link ErrorHandler}.
  */
-/* package */ class ErrorHandlerImpl implements ErrorHandler, InitializingBean {
+public class ErrorHandlerImpl implements ErrorHandler, InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerContainer.class);
 
@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
     }
 
     @Override
-    public <T extends Throwable, E> HandlingResult<E> handle(T exception) {
+    public <T extends Throwable, E> HandlingResult<E> handle(final T exception) {
         Assert.notNull(exception, "The exception must not be null");
         @SuppressWarnings("unchecked") final Class<T> receivedExceptionClass = (Class<T>) exception.getClass();
         @SuppressWarnings("unchecked") final ExceptionHandler<T, E> handler = this.handlers.stream()
@@ -88,8 +88,8 @@ import java.util.stream.Collectors;
      * @return A {@link Set} holding the {@link ExceptionHandlerContainer}
      * that result from the given {@link List} of {@link ExceptionHandler}
      */
-    private static Set<ExceptionHandlerContainer<? extends Throwable, ?>>
-    toContainers(List<ExceptionHandler<? extends Throwable, ?>> handlers) {
+    private static Set<ExceptionHandlerContainer<? extends Throwable, ?>> toContainers(
+            final List<ExceptionHandler<? extends Throwable, ?>> handlers) {
         // Transform the list of ExceptionHandlers into a list of ExceptionHandlerContainers
         final List<ExceptionHandlerContainer<? extends Throwable, ?>> containers = handlers.stream()
                 .map((Function<ExceptionHandler<? extends Throwable, ?>, ExceptionHandlerContainer<? extends Throwable, ?>>)
@@ -131,18 +131,19 @@ import java.util.stream.Collectors;
      * @throws IllegalArgumentException If any of both classes is null or if the given {@code receivedExceptionClass}
      *                                  is not a subclass of the given {@code savedExceptionClass}.
      */
-    private static int distance(Class<?> receivedExceptionClass, final Class<?> savedExceptionClass)
+    private static <T extends E, E extends Throwable> int distance(final Class<T> receivedExceptionClass,
+                                                                   final Class<E> savedExceptionClass)
             throws IllegalArgumentException {
         Assert.notNull(receivedExceptionClass, "Received null as exception to handle");
         Assert.notNull(savedExceptionClass, "A null was saved as a managed exception");
         Assert.isTrue(savedExceptionClass.isAssignableFrom(receivedExceptionClass),
                 "Received exception class is not assignable from saved exception class");
         int distance = 0;
-        while (receivedExceptionClass != savedExceptionClass) {
+        Class<?> actual = receivedExceptionClass;
+        while (actual != savedExceptionClass) {
             distance++;
-            receivedExceptionClass = receivedExceptionClass.getSuperclass();
+            actual = actual.getSuperclass();
         }
-
         return distance;
     }
 
@@ -174,7 +175,7 @@ import java.util.stream.Collectors;
          *
          * @param handler The {@link ExceptionHandler} in charge of handling the {@link Throwable} of type {@code T}.
          */
-        private ExceptionHandlerContainer(ExceptionHandler<T, E> handler) {
+        private ExceptionHandlerContainer(final ExceptionHandler<T, E> handler) {
             Assert.notNull(handler, "The handler must not be null");
             //noinspection unchecked
             this.exceptionClass = (Class<T>) ResolvableType.forClass(ExceptionHandler.class, handler.getClass())
@@ -206,7 +207,7 @@ import java.util.stream.Collectors;
          * @return {@code true} if they are the same, or {@code false} otherwise.
          */
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (!(o instanceof ExceptionHandlerContainer)) return false;
 
@@ -252,7 +253,7 @@ import java.util.stream.Collectors;
          * @param exceptionClass The subclass of {@link Throwable} from which the distance must be calculated and held.
          * @param container      The {@link ExceptionHandlerContainer} that holds the {@link Throwable} superclass.
          */
-        private ContainerWithDistance(Class<T> exceptionClass, ExceptionHandlerContainer<T, E> container) {
+        private ContainerWithDistance(final Class<T> exceptionClass, final ExceptionHandlerContainer<T, E> container) {
             this.distance = distance(exceptionClass, container.getExceptionClass());
             this.container = container;
         }

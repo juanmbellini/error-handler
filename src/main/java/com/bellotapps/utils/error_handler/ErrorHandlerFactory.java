@@ -69,7 +69,7 @@ public class ErrorHandlerFactory {
      * @param beanFactory The {@link BeanFactory} used to get beans (if they exists)
      *                    of the scanned {@link ExceptionHandler}s
      */
-    public ErrorHandlerFactory(ClassLoader classLoader, BeanFactory beanFactory) {
+    public ErrorHandlerFactory(final ClassLoader classLoader, final BeanFactory beanFactory) {
         this.classLoader = classLoader;
         this.beanFactory = beanFactory;
         this.scanner = new ClassPathScanningCandidateComponentProvider(false);
@@ -92,7 +92,7 @@ public class ErrorHandlerFactory {
      *
      * @param packages The packages whose cache will be cleared.
      */
-    public void resetCache(String... packages) {
+    public void resetCache(final String... packages) {
         resetCache(Arrays.asList(packages));
     }
 
@@ -101,7 +101,7 @@ public class ErrorHandlerFactory {
      *
      * @param packages The packages whose cache will be cleared.
      */
-    public void resetCache(Collection<String> packages) {
+    public void resetCache(final Collection<String> packages) {
         packages.forEach(this.cachedHandlers::remove);
     }
 
@@ -113,7 +113,7 @@ public class ErrorHandlerFactory {
      * @see ExceptionHandlerObject
      * @see ExceptionHandler
      */
-    public ErrorHandler createErrorHandler(String... packages) {
+    public ErrorHandler createErrorHandler(final String... packages) {
         return createErrorHandler(Arrays.asList(packages));
     }
 
@@ -125,7 +125,7 @@ public class ErrorHandlerFactory {
      * @see ExceptionHandlerObject
      * @see ExceptionHandler
      */
-    public ErrorHandler createErrorHandler(Collection<String> packages) {
+    public ErrorHandler createErrorHandler(final Collection<String> packages) {
         // Perform package scanning for those not cached
         final Map<String, List<ExceptionHandler<? extends Throwable, ?>>> foundedHandlers = packages.stream()
                 .filter(pkg -> !cachedHandlers.containsKey(pkg))
@@ -156,7 +156,7 @@ public class ErrorHandlerFactory {
      * @see ExceptionHandlerObject
      * @see ExceptionHandler
      */
-    private Set<Class<?>> scanPackage(String pkg) {
+    private Set<Class<?>> scanPackage(final String pkg) {
         return this.scanner.findCandidateComponents(pkg)
                 .stream()
                 .map(beanDef -> ClassUtils.resolveClassName(beanDef.getBeanClassName(), this.classLoader))
@@ -186,7 +186,7 @@ public class ErrorHandlerFactory {
          * @param handlerClass The class of {@link ExceptionHandler} extension.
          * @param beanFactory  The {@link BeanFactory} used to get a bean of the given {@code handlerClass}.
          */
-        private ExceptionHandlerGetter(Class<?> handlerClass, BeanFactory beanFactory) {
+        private ExceptionHandlerGetter(final Class<?> handlerClass, final BeanFactory beanFactory) {
             //noinspection unchecked
             this.handlerClass = (Class<T>) handlerClass;
             this.beanFactory = beanFactory;
@@ -201,7 +201,7 @@ public class ErrorHandlerFactory {
          * @return An {@link ExceptionHandler} of the given {@link Class}.
          */
         private T getHandler() {
-            return searchForBean().orElse(instantiate());
+            return searchForBean().orElseGet(this::instantiate);
         }
 
 
@@ -274,7 +274,7 @@ public class ErrorHandlerFactory {
          *
          * @param handlerClass The class of the bean that has been found.
          */
-        private static void logBeanFound(Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
+        private static void logBeanFound(final Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
             @SuppressWarnings("unchecked") final Class<? extends Throwable> throwableClass =
                     (Class<? extends Throwable>) ResolvableType.forClass(ExceptionHandler.class, handlerClass)
                             .getGeneric(0)
@@ -287,7 +287,8 @@ public class ErrorHandlerFactory {
          *
          * @param handlerClass The class of the beans that has been found.
          */
-        private static void logMultipleBeans(Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
+        private static void logMultipleBeans(
+                final Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
             LOGGER.warn("More than one bean exist for class {}. Will instantiate own handler", handlerClass);
         }
 
@@ -296,7 +297,8 @@ public class ErrorHandlerFactory {
          *
          * @param handlerClass The class of the not found beans.
          */
-        private static void logNoBeanFound(Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
+        private static void logNoBeanFound(
+                final Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
             LOGGER.debug("No bean for class {}. Will create one", handlerClass);
         }
 
@@ -306,7 +308,8 @@ public class ErrorHandlerFactory {
          *
          * @param handlerClass The class of the bean that could not be gotten due to errors.
          */
-        private static void logBeansException(Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
+        private static void logBeansException(
+                final Class<? extends ExceptionHandler<? extends Throwable, ?>> handlerClass) {
             LOGGER.error("Could not get bean for class {}", handlerClass);
 
         }
@@ -317,7 +320,7 @@ public class ErrorHandlerFactory {
          * @param klass The {@link Class} for which an unexpected error occurred when trying to get a bean for it.
          * @param e     The {@link Throwable} that was thrown in the process.
          */
-        private static void logUnexpectedErrorWhenSearchingForBeans(Class<?> klass, Throwable e) {
+        private static void logUnexpectedErrorWhenSearchingForBeans(final Class<?> klass, final Throwable e) {
             LOGGER.error("Some unexpected error occurred when trying to get an Exception Handler for class {}.", klass);
             LOGGER.error("Please, report this issue.", e);
         }
@@ -348,7 +351,7 @@ public class ErrorHandlerFactory {
         }
 
         @Override
-        public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory)
+        public boolean match(final MetadataReader metadataReader, final MetadataReaderFactory metadataReaderFactory)
                 throws IOException {
             return exceptionHandlerObjectAnnotationFilter.match(metadataReader, metadataReaderFactory)
                     && assignableFromExceptionHandlerInterfaceFilter.match(metadataReader, metadataReaderFactory);

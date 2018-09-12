@@ -21,5 +21,5 @@ public interface ErrorHandler {
      * @param <E>       Concrete type of entity to be sent in the response.
      * @return a {@link HandlingResult} with the data to be returned to the API consumer.
      */
-    <T extends Throwable, E> HandlingResult<E> handle(T exception);
+    <T extends Throwable, E> HandlingResult<E> handle(final T exception);
 }

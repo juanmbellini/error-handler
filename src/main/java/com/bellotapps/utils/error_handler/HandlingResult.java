@@ -26,7 +26,7 @@ public class HandlingResult<E> {
      * @param httpErrorCode             The HTTP status code that must be returned in the response.
      * @param errorRepresentationEntity The entity that will be returned in the response. Can be null.
      */
-    private HandlingResult(int httpErrorCode, E errorRepresentationEntity) {
+    private HandlingResult(final int httpErrorCode, final E errorRepresentationEntity) {
         this.httpErrorCode = httpErrorCode;
         this.errorRepresentationEntity = errorRepresentationEntity;
     }
