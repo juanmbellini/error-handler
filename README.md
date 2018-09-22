@@ -1,11 +1,11 @@
-# Error-Handler [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![Build Status](https://travis-ci.org/juanmbellini/error-handler.svg?branch=master)](https://travis-ci.org/juanmbellini/error-handler) [![Maven Central](https://img.shields.io/maven-central/v/com.bellotapps.utils/error-handler.svg)](https://repo.maven.apache.org/maven2/com/bellotapps/utils/error-handler/2.0.0-RELEASE/)
+# Error-Handler [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![Build Status](https://travis-ci.org/juanmbellini/error-handler.svg?branch=master)](https://travis-ci.org/juanmbellini/error-handler) [![Maven Central](https://img.shields.io/maven-central/v/com.bellotapps.utils/error-handler.svg)](https://repo.maven.apache.org/maven2/com/bellotapps/utils/error-handler/2.1.0-RELEASE/)
 A centralized error management system
 
 ## Description
 
-This is a library that lets you centralize error management in a spring application.
+This is a library that allows you to centralize error management in a spring application.
 
-When using several tools, like Spring Security and Jersey Server, each of those may have different error management systems, making it difficult to keep consistent the error management. For example, Jersey uses the ```ExceptionMapper``` interface, and Spring Security, filters. When an exception is thrown inside a Jersey application, you are forced to handle it there. If it's not handled, it won't propagate. Jersey will throw another exception.
+When using several tools, like Spring Security and Jersey Server, each of those may have different error management systems, making it difficult to keep a consistent error management. For example, Jersey uses the ```ExceptionMapper``` interface, and Spring Security, filters. When an exception is thrown inside a Jersey application, you are forced to handle it there. If it's not handled, it won't propagate. Jersey will throw another exception.
 
 This library lets you define objects that will handle a given exception, and that are accessed through another object (which acts like a facade). This facade object can be accessed in the error management systems of all the used tools.
 
