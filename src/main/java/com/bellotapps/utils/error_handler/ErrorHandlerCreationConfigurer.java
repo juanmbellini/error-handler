@@ -14,8 +14,7 @@ import java.util.stream.Stream;
  */
 @Configuration
 @EnableErrorHandlerFactory
-public class ErrorHandlerCreationConfigurer
-        extends AnnotationErrorHandlerCreationConfigurer<EnableErrorHandler> {
+public class ErrorHandlerCreationConfigurer extends AnnotationErrorHandlerCreationConfigurer<EnableErrorHandler> {
 
     /**
      * Constructor.

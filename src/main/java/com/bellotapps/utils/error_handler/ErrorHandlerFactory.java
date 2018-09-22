@@ -14,6 +14,7 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 import java.io.IOException;
@@ -70,6 +71,8 @@ public class ErrorHandlerFactory {
      *                    of the scanned {@link ExceptionHandler}s
      */
     public ErrorHandlerFactory(final ClassLoader classLoader, final BeanFactory beanFactory) {
+        Assert.notNull(classLoader, "The class loader must not be null");
+        Assert.notNull(beanFactory, "The bean factory must not be null");
         this.classLoader = classLoader;
         this.beanFactory = beanFactory;
         this.scanner = new ClassPathScanningCandidateComponentProvider(false);
