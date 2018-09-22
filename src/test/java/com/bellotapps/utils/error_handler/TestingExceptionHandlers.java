@@ -1,39 +1,63 @@
+/*
+ * Copyright 2018 BellotApps
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.bellotapps.utils.error_handler;
 
 /**
  * Class containing some {@link ExceptionHandler} implementations.
  */
-/* package */ class TestingExceptionHandlers {
+public class TestingExceptionHandlers {
 
-    /* package */ static class NullPointerExceptionHandler implements ExceptionHandler<NullPointerException> {
-
+    /**
+     * An {@link ExceptionHandler} for {@link NullPointerException}.
+     */
+    public static class NullPointerExceptionHandler implements ExceptionHandler<NullPointerException, String> {
         @Override
-        public ErrorHandler.HandlingResult handle(NullPointerException exception) {
-            return new ErrorHandler.HandlingResult(400, "Was null");
+        public HandlingResult<String> handle(NullPointerException exception) {
+            return HandlingResult.withPayload(400, "Was null");
         }
     }
 
-    /* package */ static class IllegalArgumentExceptionHandler implements ExceptionHandler<IllegalArgumentException> {
-
+    /**
+     * An {@link ExceptionHandler} for {@link IllegalArgumentException}.
+     */
+    public static class IllegalArgumentExceptionHandler implements ExceptionHandler<IllegalArgumentException, String> {
         @Override
-        public ErrorHandler.HandlingResult handle(IllegalArgumentException exception) {
-            return new ErrorHandler.HandlingResult(400, "illegal argument");
+        public HandlingResult<String> handle(IllegalArgumentException exception) {
+            return HandlingResult.withPayload(400, "illegal argument");
         }
     }
 
-    /* package */ static class RuntimeExceptionHandler implements ExceptionHandler<RuntimeException> {
-
+    /**
+     * An {@link ExceptionHandler} for {@link RuntimeException}.
+     */
+    public static class RuntimeExceptionHandler implements ExceptionHandler<RuntimeException, String> {
         @Override
-        public ErrorHandler.HandlingResult handle(RuntimeException exception) {
-            return new ErrorHandler.HandlingResult(500, "runtime exception");
+        public HandlingResult<String> handle(RuntimeException exception) {
+            return HandlingResult.withPayload(500, "runtime exception");
         }
     }
 
-    /* package */ static class ThrowableHandler implements ExceptionHandler<Throwable> {
-
+    /**
+     * An {@link ExceptionHandler} for {@link Throwable}.
+     */
+    public static class ThrowableHandler implements ExceptionHandler<Throwable, String> {
         @Override
-        public ErrorHandler.HandlingResult handle(Throwable exception) {
-            return new ErrorHandler.HandlingResult(500, "a throwable was not caught");
+        public HandlingResult<String> handle(Throwable exception) {
+            return HandlingResult.withPayload(500, "a throwable was not caught");
         }
     }
 }

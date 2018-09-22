@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 BellotApps
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.bellotapps.utils.error_handler;
 
 /**
@@ -9,6 +25,7 @@ package com.bellotapps.utils.error_handler;
  * @see ExceptionHandlerObject
  * @see EnableErrorHandler
  */
+@FunctionalInterface
 public interface ErrorHandler {
 
     /**
@@ -17,50 +34,8 @@ public interface ErrorHandler {
      *
      * @param exception The {@link Throwable} to be handled.
      * @param <T>       The concrete subclass type of {@link Throwable}.
+     * @param <E>       Concrete type of entity to be sent in the response.
      * @return a {@link HandlingResult} with the data to be returned to the API consumer.
      */
-    <T extends Throwable> HandlingResult handle(T exception);
-
-
-    /**
-     * Container class holding the results of handling a {@link Throwable}.
-     */
-    final class HandlingResult {
-
-        /**
-         * The HTTP status code that must be returned in the response.
-         */
-        private final int httpErrorCode;
-
-        /**
-         * The entity that will be returned in the response. Can be null.
-         */
-        private final Object errorRepresentationEntity;
-
-
-        /**
-         * Constructor.
-         *
-         * @param httpErrorCode             The HTTP status code that must be returned in the response.
-         * @param errorRepresentationEntity The entity that will be returned in the response. Can be null.
-         */
-        public HandlingResult(int httpErrorCode, Object errorRepresentationEntity) {
-            this.httpErrorCode = httpErrorCode;
-            this.errorRepresentationEntity = errorRepresentationEntity;
-        }
-
-        /**
-         * @return The HTTP status code that must be returned in the response.
-         */
-        public int getHttpErrorCode() {
-            return httpErrorCode;
-        }
-
-        /**
-         * @return The entity that will be returned in the response. Can be null.
-         */
-        public Object getErrorRepresentationEntity() {
-            return errorRepresentationEntity;
-        }
-    }
+    <T extends Throwable, E> HandlingResult<E> handle(final T exception);
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 BellotApps
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.bellotapps.utils.error_handler;
 
 import org.junit.Assert;
@@ -24,16 +40,16 @@ public class ErrorHandlerImplTest {
 
     @Test
     public void testListOfHandlersWithDefault() {
-        final ExceptionHandler<NullPointerException> nullPointerExceptionHandler =
+        final ExceptionHandler<NullPointerException, String> nullPointerExceptionHandler =
                 new TestingExceptionHandlers.NullPointerExceptionHandler();
-        final ExceptionHandler<IllegalArgumentException> illegalArgumentHandler =
+        final ExceptionHandler<IllegalArgumentException, String> illegalArgumentHandler =
                 new TestingExceptionHandlers.IllegalArgumentExceptionHandler();
-        final ExceptionHandler<RuntimeException> runtimeExceptionHandler =
+        final ExceptionHandler<RuntimeException, String> runtimeExceptionHandler =
                 new TestingExceptionHandlers.RuntimeExceptionHandler();
-        final ExceptionHandler<Throwable> throwableHandler =
+        final ExceptionHandler<Throwable, String> throwableHandler =
                 new TestingExceptionHandlers.ThrowableHandler();
 
-        final List<ExceptionHandler<? extends Throwable>> handlers = Stream
+        final List<ExceptionHandler<? extends Throwable, ?>> handlers = Stream
                 .of(nullPointerExceptionHandler, illegalArgumentHandler, runtimeExceptionHandler, throwableHandler)
                 .collect(Collectors.toList());
 
@@ -53,14 +69,14 @@ public class ErrorHandlerImplTest {
 
     @Test
     public void testListOfHandlersWithoutDefault() throws NoSuchFieldException, IllegalAccessException {
-        final ExceptionHandler<NullPointerException> nullPointerExceptionHandler =
+        final ExceptionHandler<NullPointerException, String> nullPointerExceptionHandler =
                 new TestingExceptionHandlers.NullPointerExceptionHandler();
-        final ExceptionHandler<IllegalArgumentException> illegalArgumentHandler =
+        final ExceptionHandler<IllegalArgumentException, String> illegalArgumentHandler =
                 new TestingExceptionHandlers.IllegalArgumentExceptionHandler();
-        final ExceptionHandler<RuntimeException> runtimeExceptionHandler =
+        final ExceptionHandler<RuntimeException, String> runtimeExceptionHandler =
                 new TestingExceptionHandlers.RuntimeExceptionHandler();
 
-        final List<ExceptionHandler<? extends Throwable>> handlers =
+        final List<ExceptionHandler<? extends Throwable, ?>> handlers =
                 Stream.of(nullPointerExceptionHandler, illegalArgumentHandler, runtimeExceptionHandler)
                         .collect(Collectors.toList());
 
@@ -96,19 +112,19 @@ public class ErrorHandlerImplTest {
      * @throws NoSuchFieldException   Never.
      * @throws IllegalAccessException Never.
      */
-    private static ExceptionHandler<Throwable> getDefaultHandler(ErrorHandlerImpl errorHandler)
+    private static ExceptionHandler<Throwable, String> getDefaultHandler(ErrorHandlerImpl errorHandler)
             throws NoSuchFieldException, IllegalAccessException {
         final Field defaultHandlerField = errorHandler.getClass().getDeclaredField("DEFAULT_THROWABLE_HANDLER");
         defaultHandlerField.setAccessible(true);
-        @SuppressWarnings("unchecked") final ExceptionHandler<Throwable> defaultHandler =
-                (ExceptionHandler<Throwable>) defaultHandlerField.get(errorHandler);
+        @SuppressWarnings("unchecked") final ExceptionHandler<Throwable, String> defaultHandler =
+                (ExceptionHandler<Throwable, String>) defaultHandlerField.get(errorHandler);
         defaultHandlerField.setAccessible(false);
 
         return defaultHandler;
     }
 
     /**
-     * Performs testing of handling a given {@link Throwable}, asserting that the {@link ErrorHandler.HandlingResult}
+     * Performs testing of handling a given {@link Throwable}, asserting that the {@link HandlingResult}
      * are the same when handling from the given {@link ErrorHandler} and from the given {@link ExceptionHandler}.
      *
      * @param throwable        The {@link Throwable} to be handled.
@@ -117,10 +133,10 @@ public class ErrorHandlerImplTest {
      *                         the same way the {@link ErrorHandler}.
      * @param <T>              The concrete subtype of {@link Throwable}.
      */
-    private static <T extends Throwable> void testHandle(T throwable, ErrorHandler errorHandler,
-                                                         ExceptionHandler<T> throwableHandler, String errorMessage) {
-        final ErrorHandler.HandlingResult errorHandlerResult = errorHandler.handle(throwable);
-        final ErrorHandler.HandlingResult exceptionHandlerResult = throwableHandler.handle(throwable);
+    private static <T extends Throwable, E> void testHandle(T throwable, ErrorHandler errorHandler,
+                                                            ExceptionHandler<T, E> throwableHandler, String errorMessage) {
+        final HandlingResult errorHandlerResult = errorHandler.handle(throwable);
+        final HandlingResult exceptionHandlerResult = throwableHandler.handle(throwable);
         // Test a result is returned
         Assert.assertNotNull(errorMessage, errorHandlerResult);
         // Test result content
