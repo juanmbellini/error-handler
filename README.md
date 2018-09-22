@@ -178,7 +178,7 @@ Finally, you could create your own ```ErrorHandler``` using an ```ErrorHandlerFa
 
 ## License
 
-Copyright 2017 BellotApps
+Copyright 2018 BellotApps
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
